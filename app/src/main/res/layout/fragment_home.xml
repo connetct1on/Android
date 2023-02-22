@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.Fragment.ChatFragment">
+    tools:context=".presentation.Fragment.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

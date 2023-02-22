@@ -6,10 +6,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import com.example.login.presentation.Home
 import com.example.login.databinding.ActivityMainBinding
+import com.example.login.presentation.Register
+import io.socket.client.Socket
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     val TAG: String = "MainActivity"
@@ -17,11 +19,13 @@ class MainActivity : AppCompatActivity() {
     private var mbinding: ActivityMainBinding ?= null
     private val binding get() = mbinding!!
 
+    private lateinit var mSocket: Socket
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mbinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         // 로그인 버튼
         binding.btnLogin.setOnClickListener {
 
@@ -30,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             var pw = binding.editPw.text.toString()
 
             // 쉐어드로부터 저장된 id, pw 가져오기
-            val sharedPreference = getSharedPreferences("file name", Context.MODE_PRIVATE)
+            val sharedPreference = getSharedPreferences("file name", MODE_PRIVATE)
             val savedId = sharedPreference.getString("id", "")
             val savedPw = sharedPreference.getString("pw", "")
 
@@ -38,8 +42,7 @@ class MainActivity : AppCompatActivity() {
             if(id == savedId && pw == savedPw){
                 // 로그인 성공 다이얼로그 보여주기
                 dialog("success")
-            }
-            else{
+            } else{
                 // 로그인 실패 다이얼로그 보여주기
                 dialog("fail")
             }
@@ -50,8 +53,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, Register::class.java)
             startActivity(intent)
         }
-
-
 
     }
 
@@ -68,19 +69,17 @@ class MainActivity : AppCompatActivity() {
             dialog.setMessage("아이디와 비밀번호를 확인해주세요")
         }
 
-        var dialog_listener = object: DialogInterface.OnClickListener{
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                val alertDialog = (dialog as AlertDialog)
-                when(which){
-                    DialogInterface.BUTTON_POSITIVE -> {
-                        when(type) {
-                            "success" -> {
-                                startActivity(Intent(this@MainActivity,Home::class.java))
-                            }
-                            else -> { }
+        var dialog_listener = DialogInterface.OnClickListener { dialog, which ->
+            val alertDialog = (dialog as AlertDialog)
+            when(which){
+                DialogInterface.BUTTON_POSITIVE -> {
+                    when(type) {
+                        "success" -> {
+                            startActivity(Intent(this@MainActivity, Home::class.java))
                         }
-                        Log.d(TAG, "")
+                        else -> { }
                     }
+                    Log.d(TAG, "")
                 }
             }
         }

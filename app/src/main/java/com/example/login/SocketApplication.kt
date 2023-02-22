@@ -1,4 +1,4 @@
-package com.example.login.socket
+package com.example.login
 
 import android.util.Log
 import io.socket.client.IO
@@ -10,7 +10,7 @@ class SocketApplication {
         private lateinit var socket: Socket
         fun get(): Socket {
             try {
-                socket = IO.socket("http://220.94.98.54:7999/rt/chat/")
+                socket = IO.socket("ws://220.94.98.54:7999/rt/chat/")
             } catch (e: URISyntaxException){
                 Log.e("상태",e.reason)
             }

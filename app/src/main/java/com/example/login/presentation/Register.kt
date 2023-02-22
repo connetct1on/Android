@@ -1,4 +1,4 @@
-package com.example.login
+package com.example.login.presentation
 
 import android.content.Context
 import android.content.DialogInterface
@@ -6,12 +6,15 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.example.login.MainActivity
+import com.example.login.databinding.ActivityRegisterBinding
 
 class Register : AppCompatActivity() {
+
+    private var mbinding: ActivityRegisterBinding ?= null
+    private val binding get() = mbinding!!
 
     val TAG: String = "Register"
     var isExistBlank = false
@@ -19,21 +22,17 @@ class Register : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
-
-        var btn_register2 : Button = findViewById<Button>(R.id.btn_register)
-        var edit_id : EditText = findViewById<EditText>(R.id.edit_id)
-        var edit_pw : EditText = findViewById<EditText>(R.id.edit_pw)
-        var edit_pw_re : EditText = findViewById<EditText>(R.id.edit_pw_re)
+        mbinding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // 회원가입 버튼
-        btn_register2.setOnClickListener {
+        binding.btnRegister.setOnClickListener {
             Log.d(TAG, "회원가입 버튼 클릭")
 
             // editText로부터 유저가 입력한 값들을 받아온다
-            val id = edit_id.text.toString()
-            val pw = edit_pw.text.toString()
-            val pw_re = edit_pw_re.text.toString()
+            val id = binding.editId.text.toString()
+            val pw = binding.editPw.text.toString()
+            val pw_re = binding.editPwRe.text.toString()
 
             // 유저가 입력항목을 다 채우지 않았을 경우
             if(id.isEmpty() || pw.isEmpty() || pw_re.isEmpty()){
@@ -71,9 +70,7 @@ class Register : AppCompatActivity() {
                     dialog("not same")
                 }
             }
-
         }
-
     }
 
     // 회원가입 실패시 다이얼로그를 띄워주는 메소드

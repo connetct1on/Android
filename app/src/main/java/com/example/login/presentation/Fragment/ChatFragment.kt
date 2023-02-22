@@ -7,12 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.login.R
 import com.example.login.databinding.FragmentChatBinding
+import io.socket.client.Socket
 
 
 class ChatFragment : Fragment() {
 
+    //viewBinding
     private var mbinding: FragmentChatBinding ?= null
     private val binding get() = mbinding!!
+
+    //Socket
+    private lateinit var mSocket: Socket
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,6 +25,8 @@ class ChatFragment : Fragment() {
     ): View? {
         mbinding = FragmentChatBinding.inflate(inflater, container, false)
         val view = binding.root
+
+
         return view
     }
 

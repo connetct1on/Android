@@ -1,8 +1,8 @@
-package com.example.socket.retrofit.request
+package com.example.login.network.retrofit.response
 
 import com.google.gson.annotations.SerializedName
 
-data class CreateRoomRequest(
+data class FindRoomResponse(
     @SerializedName("access")
     val access: String,
     @SerializedName("name")

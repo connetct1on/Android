@@ -16,7 +16,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mbinding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
         return view

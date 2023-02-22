@@ -1,8 +1,8 @@
-package com.example.socket.retrofit.request
+package com.example.login.network.retrofit.request
 
 import com.google.gson.annotations.SerializedName
 
-data class SignupRequest(
+data class LoginRequset(
     @SerializedName("access")
     val access: String,
     @SerializedName("email")

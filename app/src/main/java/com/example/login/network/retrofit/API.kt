@@ -1,0 +1,32 @@
+package com.example.login.network.retrofit
+
+import com.example.login.network.retrofit.request.CreateRoomRequest
+import com.example.login.network.retrofit.request.LoginRequset
+import com.example.login.network.retrofit.request.SignupRequest
+import com.example.login.network.retrofit.response.CreateRoomResponse
+import com.example.login.network.retrofit.response.FindRoomResponse
+import com.example.login.network.retrofit.response.LoginResponse
+import retrofit2.Call
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+
+interface API {
+    @POST("api/chat/create")
+    fun createRoom(
+        @Body body: CreateRoomRequest
+    ): Call<CreateRoomResponse>
+
+    @GET("api/chat/find")
+    fun findRoom(): List<FindRoomResponse>
+
+    @POST("api/user/signup.do")
+    fun signup(
+        @Body body: SignupRequest
+    ): Call<Void>
+
+    @POST("api/user/login.do")
+    fun login(
+        @Body body: LoginRequset
+    ): Call<LoginResponse>
+}

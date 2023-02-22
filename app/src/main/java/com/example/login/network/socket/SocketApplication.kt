@@ -1,4 +1,4 @@
-package com.example.login
+package com.example.login.network.socket
 
 import android.util.Log
 import io.socket.client.IO

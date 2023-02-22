@@ -47,12 +47,6 @@ class Register : AppCompatActivity() {
 
             if(!isExistBlank && isPWSame){
 
-                // 유저가 입력한 id, pw를 쉐어드에 저장한다.
-                val sharedPreference = getSharedPreferences("file name", Context.MODE_PRIVATE)
-                val editor = sharedPreference.edit()
-                editor.putString("id", id)
-                editor.putString("pw", pw)
-                editor.apply()
 
                 // 회원가입 성공 토스트 메세지 띄우기
                 Toast.makeText(this, "회원가입 성공", Toast.LENGTH_SHORT).show()
@@ -100,10 +94,4 @@ class Register : AppCompatActivity() {
         dialog.setPositiveButton("확인",dialog_listener)
         dialog.show()
     }
-
-
-
-
-
-
 }

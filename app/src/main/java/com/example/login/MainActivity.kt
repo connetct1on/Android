@@ -9,8 +9,15 @@ import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import com.example.login.presentation.Home
 import com.example.login.databinding.ActivityMainBinding
+import com.example.login.network.retrofit.RetrofitClient
+import com.example.login.network.retrofit.request.LoginRequset
+import com.example.login.network.retrofit.response.LoginResponse
 import com.example.login.presentation.Register
 import io.socket.client.Socket
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
@@ -19,8 +26,6 @@ class MainActivity : AppCompatActivity() {
     private var mbinding: ActivityMainBinding ?= null
     private val binding get() = mbinding!!
 
-    private lateinit var mSocket: Socket
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mbinding = ActivityMainBinding.inflate(layoutInflater)
@@ -28,25 +33,29 @@ class MainActivity : AppCompatActivity() {
 
         // 로그인 버튼
         binding.btnLogin.setOnClickListener {
-
             //editText로부터 입력된 값을 받아온다
             var id = binding.editId.text.toString()
             var pw = binding.editPw.text.toString()
 
-            // 쉐어드로부터 저장된 id, pw 가져오기
-            val sharedPreference = getSharedPreferences("file name", MODE_PRIVATE)
-            val savedId = sharedPreference.getString("id", "")
-            val savedPw = sharedPreference.getString("pw", "")
+            val call = RetrofitClient.api.login(LoginRequset(access = String(), email = id, name = String(), password = pw, idx = Long()))
+            call.enqueue(object : Callback<LoginResponse>{
+                override fun onResponse(
+                    call: Call<LoginResponse>,
+                    response: Response<LoginResponse>
+                ) {
+                    if(response.code() == 200){
+                        Log.d("상태","성공")
+                    } else{
+                        Log.d("상태","실패: ${response.code()}")
+                    }
+                }
 
-            // 유저가 입력한 id, pw값과 쉐어드로 불러온 id, pw값 비교
-            if(id == savedId && pw == savedPw){
-                // 로그인 성공 다이얼로그 보여주기
-                dialog("success")
-            } else{
-                // 로그인 실패 다이얼로그 보여주기
-                dialog("fail")
-            }
-        }
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                    Log.d("상태", t.message.toString())
+                }
+
+            })
+       }
 
         // 회원가입 버튼
             binding.btnRegister.setOnClickListener {

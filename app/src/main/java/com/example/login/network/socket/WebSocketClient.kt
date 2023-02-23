@@ -3,6 +3,7 @@ package com.example.login.network.socket
 import android.util.Log
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
+import org.json.JSONObject
 import java.lang.Exception
 import java.net.URI
 
@@ -10,6 +11,14 @@ class WebSocketClient(serverUri: URI): WebSocketClient(serverUri){
     override fun onOpen(handshakedata: ServerHandshake?) {
         //WebSocket 연결이 열릴 때 호출된다.
         Log.d("상태","연결")
+        val jsonObject = JSONObject()
+        jsonObject.put("type","ENTER")
+        jsonObject.put("roomId","f5627bec-f75a-4e67-b8b9-772af85e1326")
+        jsonObject.put("sender","HamTory")
+        jsonObject.put("message","Hello")
+
+        val message = jsonObject.toString()
+        send(message)
     }
 
     override fun onMessage(message: String?) {
@@ -26,5 +35,4 @@ class WebSocketClient(serverUri: URI): WebSocketClient(serverUri){
         //WebSocket 연결에서 애러가 발생하면 호출된다.
         Log.d("상태","연결애러: ${ex?.message}")
     }
-
 }

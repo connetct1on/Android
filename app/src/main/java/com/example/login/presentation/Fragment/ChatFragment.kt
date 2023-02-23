@@ -25,7 +25,7 @@ class ChatFragment : Fragment() {
         val view = binding.root
         val serverUri = URI.create("ws://220.94.98.54:7999/rt/chat")
         val webSocketClient = WebSocketClient(serverUri)
-        webSocketClient.connection
+        webSocketClient.connect()
         return view
     }
 

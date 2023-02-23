@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.login.R
 import com.example.login.databinding.FragmentChatBinding
-import io.socket.client.Socket
+import com.example.login.network.socket.WebSocketClient
+import java.net.URI
 
 
 class ChatFragment : Fragment() {
@@ -23,15 +23,15 @@ class ChatFragment : Fragment() {
     ): View {
         mbinding = FragmentChatBinding.inflate(inflater, container, false)
         val view = binding.root
-        mSocket.connect()
-
-
+        val serverUri = URI.create("ws://220.94.98.54:7999/rt/chat")
+        val webSocketClient = WebSocketClient(serverUri)
+        webSocketClient.connection
         return view
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mbinding = null
-        mSocket.disconnect()
+
     }
 }

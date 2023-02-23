@@ -22,7 +22,7 @@
             android:layout_weight="1"/>
         <Button
             android:id="@+id/message"
-            android:background="null"
+            android:background="#00FF0000"
             android:text="Send"
             android:textAllCaps="false"
             android:layout_width="70dp"

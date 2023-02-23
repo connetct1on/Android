@@ -1,6 +1,5 @@
 package com.example.login
 
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -12,13 +11,11 @@ import com.example.login.databinding.ActivityMainBinding
 import com.example.login.network.retrofit.RetrofitClient
 import com.example.login.network.retrofit.request.LoginRequset
 import com.example.login.network.retrofit.response.LoginResponse
-import com.example.login.presentation.Register
-import io.socket.client.Socket
+import com.example.login.network.sharedPreFerences.SharedPreFerences
+import com.example.login.presentation.Singup
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     val TAG: String = "MainActivity"
@@ -37,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             var id = binding.editId.text.toString()
             var pw = binding.editPw.text.toString()
 
-            val call = RetrofitClient.api.login(LoginRequset(access = String(), email = id, name = String(), password = pw, idx = Long()))
+            val call = RetrofitClient.api.login(LoginRequset(email = id, password = pw))
             call.enqueue(object : Callback<LoginResponse>{
                 override fun onResponse(
                     call: Call<LoginResponse>,
@@ -45,6 +42,8 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     if(response.code() == 200){
                         Log.d("상태","성공")
+                        SharedPreFerences(this@MainActivity).dataAccessToken = response.body()?.accessToken
+                        SharedPreFerences(this@MainActivity).dataRefreshToken = response.body()?.refreshToken
                     } else{
                         Log.d("상태","실패: ${response.code()}")
                     }
@@ -59,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         // 회원가입 버튼
             binding.btnRegister.setOnClickListener {
-            val intent = Intent(this, Register::class.java)
+            val intent = Intent(this, Singup::class.java)
             startActivity(intent)
         }
 

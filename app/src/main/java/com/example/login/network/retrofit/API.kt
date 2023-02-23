@@ -6,6 +6,7 @@ import com.example.login.network.retrofit.request.SignupRequest
 import com.example.login.network.retrofit.response.CreateRoomResponse
 import com.example.login.network.retrofit.response.FindRoomResponse
 import com.example.login.network.retrofit.response.LoginResponse
+import com.example.login.network.retrofit.response.SignupResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -23,7 +24,7 @@ interface API {
     @POST("api/user/signup.do")
     fun signup(
         @Body body: SignupRequest
-    ): Call<Void>
+    ): Call<SignupResponse>
 
     @POST("api/user/login.do")
     fun login(

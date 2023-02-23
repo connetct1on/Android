@@ -1,6 +1,5 @@
 package com.example.login.presentation
 
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,11 +8,18 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.login.MainActivity
-import com.example.login.databinding.ActivityRegisterBinding
+import com.example.login.databinding.ActivitySingupBinding
+import com.example.login.network.retrofit.RetrofitClient
+import com.example.login.network.retrofit.request.SignupRequest
+import com.example.login.network.retrofit.response.SignupResponse
+import com.example.login.network.sharedPreFerences.SharedPreFerences
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class Register : AppCompatActivity() {
+class Singup : AppCompatActivity() {
 
-    private var mbinding: ActivityRegisterBinding ?= null
+    private var mbinding: ActivitySingupBinding ?= null
     private val binding get() = mbinding!!
 
     val TAG: String = "Register"
@@ -22,7 +28,7 @@ class Register : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mbinding = ActivityRegisterBinding.inflate(layoutInflater)
+        mbinding = ActivitySingupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // 회원가입 버튼
@@ -46,8 +52,24 @@ class Register : AppCompatActivity() {
             }
 
             if(!isExistBlank && isPWSame){
+                val call = RetrofitClient.api.signup(SignupRequest(name = String(), password = pw, email = id))
+                call.enqueue(object : Callback<SignupResponse>{
+                    override fun onResponse(
+                        call: Call<SignupResponse>,
+                        response: Response<SignupResponse>
+                    ) {
+                        if(response.code() == 200){
+                            Log.d("상태","성공: ${response.body()?.idx}")
+                        } else{
+                            Log.d("상태","실패: ${response.code()}")
+                        }
+                    }
 
+                    override fun onFailure(call: Call<SignupResponse>, t: Throwable) {
+                        Log.d("상태","실패: ${t.message.toString()}")
+                    }
 
+                })
                 // 회원가입 성공 토스트 메세지 띄우기
                 Toast.makeText(this, "회원가입 성공", Toast.LENGTH_SHORT).show()
 
@@ -82,12 +104,10 @@ class Register : AppCompatActivity() {
             dialog.setMessage("비밀번호가 다릅니다")
         }
 
-        val dialog_listener = object: DialogInterface.OnClickListener{
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                when(which){
-                    DialogInterface.BUTTON_POSITIVE ->
-                        Log.d(TAG, "다이얼로그")
-                }
+        val dialog_listener = DialogInterface.OnClickListener { dialog, which ->
+            when(which){
+                DialogInterface.BUTTON_POSITIVE ->
+                    Log.d(TAG, "다이얼로그")
             }
         }
 

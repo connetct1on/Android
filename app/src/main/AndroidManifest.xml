@@ -23,7 +23,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.Register"
+            android:name=".presentation.Singup"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

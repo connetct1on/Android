@@ -8,13 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.login.R
-import com.example.login.adapter.MessageAdapter
 import com.example.login.adapter.RoomAdapter
 import com.example.login.databinding.FragmentRoomBinding
-import com.example.login.message.Message
-import com.example.login.message.createRoom.CreateRoom
-import com.example.login.message.findRoom.FindRoom
 import com.example.login.network.retrofit.RetrofitClient
 import com.example.login.network.retrofit.request.CreateRoomRequest
 import com.example.login.network.retrofit.response.CreateRoomResponse
@@ -36,7 +31,7 @@ class RoomFragment : Fragment() {
     ): View {
         mbinding = FragmentRoomBinding.inflate(inflater, container, false)
         val view = binding.root
-        RetrofitClient.api.findRoom(SharedPreFerences(FindRoom.context).dataBearerToken).enqueue(object : Callback<List<FindRoomResponse>>{
+        RetrofitClient.api.findRoom(SharedPreFerences(requireContext()).dataBearerToken).enqueue(object : Callback<List<FindRoomResponse>>{
             override fun onResponse(
                 call: Call<List<FindRoomResponse>>,
                 response: Response<List<FindRoomResponse>>
@@ -44,6 +39,7 @@ class RoomFragment : Fragment() {
                 if(response.code() == 200){
                     Log.d("상태","성공")
                     mData = response.body()!!
+                    Log.d("상태","${mData}")
                 } else{
                     Log.d("실패","실패 : ${response.code()}")
                 }
@@ -55,12 +51,34 @@ class RoomFragment : Fragment() {
 
         })
 
-        binding.recyclerview.layoutManager = LinearLayoutManager(activity)
-        mAdapter = RoomAdapter(mData)
-        binding.recyclerview.addItemDecoration(
-            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-        )
-        binding.recyclerview.adapter = mAdapter
+        binding.addRoom.setOnClickListener {
+            RetrofitClient.api.createRoom(SharedPreFerences(requireContext()).dataBearerToken,
+                CreateRoomRequest(name = "n번방")
+            ).enqueue(object : Callback<CreateRoomResponse>{
+                override fun onResponse(
+                    call: Call<CreateRoomResponse>,
+                    response: Response<CreateRoomResponse>
+                ) {
+                    if(response.code() == 200){
+                        Log.d("상태","성공 : ${response.body()?.roomId}")
+                    } else {
+                        Log.d("실패","실패: ${response.code()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<CreateRoomResponse>, t: Throwable) {
+                    Log.d("상태", t.message.toString())
+                }
+
+            })
+        }
+
+//        binding.recyclerview.layoutManager = LinearLayoutManager(activity)
+//        mAdapter = RoomAdapter(mData)
+//        binding.recyclerview.addItemDecoration(
+//            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+//        )
+//        binding.recyclerview.adapter = mAdapter
 
         return view
     }

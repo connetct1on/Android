@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.login.R
 import com.example.login.databinding.FragmentRoomBinding
 import com.example.login.databinding.ItemRecyclerviewRoomBinding
-import com.example.login.message.findRoom.FindRoom
 import com.example.login.network.retrofit.response.FindRoomResponse
 import com.example.login.presentation.Fragment.ChatFragment
 

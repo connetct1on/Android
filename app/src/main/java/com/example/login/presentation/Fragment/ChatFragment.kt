@@ -13,7 +13,6 @@ import com.example.login.adapter.MessageAdapter
 import com.example.login.databinding.FragmentChatBinding
 import com.example.login.message.Message
 import com.example.login.network.sharedPreFerences.SharedPreFerences
-import com.example.login.network.socket.WebSocketClient
 import org.json.JSONObject
 import java.net.URI
 import kotlin.concurrent.thread
@@ -46,22 +45,11 @@ class ChatFragment : Fragment() {
     ): View {
         mbinding = FragmentChatBinding.inflate(inflater, container, false)
         val view = binding.root
-        val headers = HashMap<String, String>()
-        headers["Authorization"] = SharedPreFerences(fragmentContext).dataBearerToken.toString()
-        Log.d("상태","$headers")
-        val webSocketClient = WebSocketClient(serverUri, headers)
-        thread {
-            webSocketClient.connect()
-        }
-        binding.messageButton.setOnClickListener {
-            val jsonObject = JSONObject()
-            jsonObject.put("type","TALK")
-            jsonObject.put("roomId","34ce07dd-7c66-4d5c-ae77-2544fb35c875")
-            jsonObject.put("sender","HamTory")
-            jsonObject.put("message","${binding.messageText}")
 
-            val message = jsonObject.toString()
-            webSocketClient.send(message)
+        val url = "ws"
+
+        binding.messageButton.setOnClickListener {
+
             mData.add(Message("${binding.messageText}",""))
 
         }

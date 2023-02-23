@@ -1,16 +1,21 @@
 package com.example.login.message.createRoom
 
+import android.content.Context
 import android.util.Log
 import com.example.login.network.retrofit.RetrofitClient
 import com.example.login.network.retrofit.request.CreateRoomRequest
 import com.example.login.network.retrofit.response.CreateRoomResponse
+import com.example.login.network.sharedPreFerences.SharedPreFerences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class CreateRoom {
-    fun createRoom(){
-        val call = RetrofitClient.api.createRoom(CreateRoomRequest(name = String()))
+    companion object{
+        lateinit var context: Context
+    }
+    fun createRoom(room: String){
+        val call = RetrofitClient.api.createRoom(SharedPreFerences(context).dataAccessToken,CreateRoomRequest(name = room))
         call.enqueue(object : Callback<CreateRoomResponse>{
             override fun onResponse(
                 call: Call<CreateRoomResponse>,

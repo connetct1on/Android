@@ -13,7 +13,7 @@ class WebSocketClient(serverUri: URI): WebSocketClient(serverUri){
         Log.d("상태","연결")
         val jsonObject = JSONObject()
         jsonObject.put("type","ENTER")
-        jsonObject.put("roomId","b12f59f1-10fe-4880-947b-8639ba3812e6")
+        jsonObject.put("roomId","34ce07dd-7c66-4d5c-ae77-2544fb35c875")
         jsonObject.put("sender","HamTory")
         jsonObject.put("message","Hello")
 

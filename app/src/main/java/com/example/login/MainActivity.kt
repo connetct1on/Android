@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity() {
                         Log.d("상태","성공")
                         SharedPreFerences(this@MainActivity).dataAccessToken = response.body()?.accessToken
                         SharedPreFerences(this@MainActivity).dataRefreshToken = response.body()?.refreshToken
+                        val intent = Intent(this@MainActivity,Home::class.java)
+                        startActivity(intent)
                     } else{
                         Log.d("상태","실패: ${response.code()}")
                     }

@@ -19,7 +19,7 @@ interface API {
     ): Call<CreateRoomResponse>
 
     @GET("api/chat/find")
-    fun findRoom(): List<FindRoomResponse>
+    fun findRoom(): Call<List<FindRoomResponse>>
 
     @POST("api/user/signup.do")
     fun signup(

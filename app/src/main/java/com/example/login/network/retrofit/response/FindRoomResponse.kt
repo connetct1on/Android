@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class FindRoomResponse(
     @SerializedName("access")
-    val access: String,
+    val access: Int,
     @SerializedName("name")
     val name: String,
     @SerializedName("roomId")

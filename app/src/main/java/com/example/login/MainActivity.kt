@@ -46,6 +46,8 @@ class MainActivity : AppCompatActivity() {
                         Log.d("상태","성공")
                         SharedPreFerences(this@MainActivity).dataAccessToken = response.body()?.accessToken
                         SharedPreFerences(this@MainActivity).dataRefreshToken = response.body()?.refreshToken
+                        SharedPreFerences(this@MainActivity).dataBearerToken = "Bearer " + response.body()?.accessToken
+                        Log.d("상태","${SharedPreFerences(this@MainActivity).dataBearerToken}")
                         val intent = Intent(this@MainActivity,Home::class.java)
                         startActivity(intent)
                     } else{

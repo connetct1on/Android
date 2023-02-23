@@ -7,6 +7,7 @@ import com.example.login.R
 import com.example.login.databinding.ActivityHomeBinding
 import com.example.login.presentation.Fragment.ChatFragment
 import com.example.login.presentation.Fragment.HomeFragment
+import com.example.login.presentation.Fragment.RoomFragment
 import com.example.login.presentation.Fragment.SettingFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -19,7 +20,7 @@ class Home : AppCompatActivity() {
         setContentView(binding.root)
 
         val homeFragment = HomeFragment()
-        val chattingFragment = ChatFragment()
+        val roomFragment = RoomFragment()
         val myPageFragment = SettingFragment()
 
 
@@ -28,12 +29,11 @@ class Home : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> replaceFragment(homeFragment)
-                R.id.chatting -> replaceFragment(chattingFragment)
+                R.id.chatting -> replaceFragment(roomFragment)
                 R.id.myPage -> replaceFragment(myPageFragment)
             }
             true
         }
-
     }
 
     private fun replaceFragment(fragment: Fragment) {

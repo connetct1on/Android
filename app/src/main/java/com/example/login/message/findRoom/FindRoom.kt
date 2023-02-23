@@ -11,8 +11,10 @@ import retrofit2.Response
 
 class FindRoom {
 
+
     companion object{
         lateinit var context: Context
+        lateinit var room: List<FindRoomResponse>
     }
     fun findRoom(){
         RetrofitClient.api.findRoom(SharedPreFerences(context).dataAccessToken).enqueue(object : Callback<List<FindRoomResponse>>{

@@ -1,13 +1,32 @@
 package com.example.login.presentation.Fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.login.R
+import com.example.login.adapter.MessageAdapter
+import com.example.login.adapter.RoomAdapter
 import com.example.login.databinding.FragmentRoomBinding
+import com.example.login.message.Message
+import com.example.login.message.createRoom.CreateRoom
+import com.example.login.message.findRoom.FindRoom
+import com.example.login.network.retrofit.RetrofitClient
+import com.example.login.network.retrofit.request.CreateRoomRequest
+import com.example.login.network.retrofit.response.CreateRoomResponse
+import com.example.login.network.retrofit.response.FindRoomResponse
+import com.example.login.network.sharedPreFerences.SharedPreFerences
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
+
+private lateinit var mAdapter: RoomAdapter
+lateinit var mData: List<FindRoomResponse>
 class RoomFragment : Fragment() {
     private var mbinding: FragmentRoomBinding ?= null
     private val binding get() = mbinding!!
@@ -17,6 +36,32 @@ class RoomFragment : Fragment() {
     ): View {
         mbinding = FragmentRoomBinding.inflate(inflater, container, false)
         val view = binding.root
+        RetrofitClient.api.findRoom(SharedPreFerences(FindRoom.context).dataBearerToken).enqueue(object : Callback<List<FindRoomResponse>>{
+            override fun onResponse(
+                call: Call<List<FindRoomResponse>>,
+                response: Response<List<FindRoomResponse>>
+            ) {
+                if(response.code() == 200){
+                    Log.d("상태","성공")
+                    mData = response.body()!!
+                } else{
+                    Log.d("실패","실패 : ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<List<FindRoomResponse>>, t: Throwable) {
+                Log.d("상태",t.message.toString())
+            }
+
+        })
+
+        binding.recyclerview.layoutManager = LinearLayoutManager(activity)
+        mAdapter = RoomAdapter(mData)
+        binding.recyclerview.addItemDecoration(
+            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        )
+        binding.recyclerview.adapter = mAdapter
+
         return view
     }
 }

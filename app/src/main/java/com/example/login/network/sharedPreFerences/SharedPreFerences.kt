@@ -14,4 +14,8 @@ class SharedPreFerences(context : Context) {
     var dataRefreshToken: String?
         get() = prefs.getString("RefreshToken","")
         set(value) = prefs.edit().putString("RefreshToken",value).apply()
+
+    var dataBearerToken: String?
+        get() = prefs.getString("BearerToken","")
+        set(value) = prefs.edit().putString("BearerToken",value).apply()
 }

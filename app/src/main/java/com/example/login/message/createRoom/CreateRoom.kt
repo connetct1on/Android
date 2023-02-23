@@ -15,7 +15,7 @@ class CreateRoom {
         lateinit var context: Context
     }
     fun createRoom(room: String){
-        val call = RetrofitClient.api.createRoom(SharedPreFerences(context).dataAccessToken,CreateRoomRequest(name = room))
+        val call = RetrofitClient.api.createRoom(SharedPreFerences(context).dataBearerToken,CreateRoomRequest(name = room))
         call.enqueue(object : Callback<CreateRoomResponse>{
             override fun onResponse(
                 call: Call<CreateRoomResponse>,

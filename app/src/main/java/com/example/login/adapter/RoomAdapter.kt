@@ -1,6 +1,7 @@
 package com.example.login.adapter
 
 
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -27,15 +28,20 @@ class RoomAdapter(private val dataList: List<FindRoomResponse>): RecyclerView.Ad
         Log.d("어댑터", data.name)
         binding.root.setOnClickListener {
             val messageFragment = ChatFragment()
+            val bundle = Bundle()
+            bundle.putString("roomName",data.name)
+            bundle.putString("roomId",data.roomId)
 
             val fragmentManager = (holder.itemView.context as AppCompatActivity).supportFragmentManager
+            messageFragment.arguments = bundle
             fragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, messageFragment)
                 .addToBackStack(null)
                 .commit()
         }
     }
+    inner class RoomViewHolder(val binding: ItemRecyclerviewRoomBinding): RecyclerView.ViewHolder(binding.root)
 }
 
-class RoomViewHolder(val binding: ItemRecyclerviewRoomBinding): RecyclerView.ViewHolder(binding.root)
+
 

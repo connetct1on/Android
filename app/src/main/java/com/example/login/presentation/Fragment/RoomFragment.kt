@@ -21,7 +21,7 @@ import retrofit2.Response
 
 
 private lateinit var mAdapter: RoomAdapter
-private var mData: List<FindRoomResponse> = listOf(FindRoomResponse(0,"room","roomId"))
+private var mData: List<FindRoomResponse> = listOf(FindRoomResponse(0,"","roomId"))
 class RoomFragment : Fragment() {
     private var mbinding: FragmentRoomBinding ?= null
     private val binding get() = mbinding!!
@@ -31,6 +31,31 @@ class RoomFragment : Fragment() {
     ): View {
         mbinding = FragmentRoomBinding.inflate(inflater, container, false)
         val view = binding.root
+        findRoom()
+
+        binding.addRoom.setOnClickListener { //방 추가
+            addRoom()
+        }
+
+        binding.Refresh.setOnRefreshListener { //새로 고침
+            findRoom()
+            mAdapter = RoomAdapter(mData)
+            binding.recyclerview.adapter = mAdapter
+            mAdapter.notifyDataSetChanged()
+            binding.Refresh.isRefreshing = false
+        }
+
+        binding.recyclerview.layoutManager = LinearLayoutManager(activity)
+        mAdapter = RoomAdapter(mData)
+        binding.recyclerview.addItemDecoration( //recyclerview 구분선
+            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        )
+        binding.recyclerview.adapter = mAdapter //어댑터 연결
+
+        return view
+    }
+
+    fun findRoom(){ //방 찾는 함수
         RetrofitClient.api.findRoom(SharedPreFerences(requireContext()).dataBearerToken).enqueue(object : Callback<List<FindRoomResponse>>{
             override fun onResponse(
                 call: Call<List<FindRoomResponse>>,
@@ -38,8 +63,8 @@ class RoomFragment : Fragment() {
             ) {
                 if(response.code() == 200){
                     Log.d("상태","성공")
-//                    mData = response.body()!!
-//                    Log.d("상태","${mData}")
+                    mData = response.body()!!
+                    Log.d("상태","${mData}")
                 } else{
                     Log.d("실패","실패 : ${response.code()} BearerToken: ${SharedPreFerences(requireContext()).dataBearerToken}")
                     mData = listOf(FindRoomResponse(1,"room","fdklsj"))
@@ -51,36 +76,27 @@ class RoomFragment : Fragment() {
             }
 
         })
-
-        binding.addRoom.setOnClickListener {
-            RetrofitClient.api.createRoom(SharedPreFerences(requireContext()).dataBearerToken,
-                CreateRoomRequest(name = "n번방")
-            ).enqueue(object : Callback<CreateRoomResponse>{
-                override fun onResponse(
-                    call: Call<CreateRoomResponse>,
-                    response: Response<CreateRoomResponse>
-                ) {
-                    if(response.code() == 200){
-                        Log.d("상태","성공 : ${response.body()?.roomId}")
-                    } else {
-                        Log.d("상태","실패: ${response.code()}")
-                    }
-                }
-
-                override fun onFailure(call: Call<CreateRoomResponse>, t: Throwable) {
-                    Log.d("상태", t.message.toString())
-                }
-
-            })
-        }
-
-        binding.recyclerview.layoutManager = LinearLayoutManager(activity)
-        mAdapter = RoomAdapter(mData)
-        binding.recyclerview.addItemDecoration(
-            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-        )
-        binding.recyclerview.adapter = mAdapter
-
-        return view
     }
+    fun addRoom(){ //방 만드는 함수
+        RetrofitClient.api.createRoom(SharedPreFerences(requireContext()).dataBearerToken,
+            CreateRoomRequest(name = "i번방")
+        ).enqueue(object : Callback<CreateRoomResponse>{
+            override fun onResponse(
+                call: Call<CreateRoomResponse>,
+                response: Response<CreateRoomResponse>
+            ) {
+                if(response.code() == 200){
+                    Log.d("상태","성공 : ${response.body()?.roomId}")
+                } else {
+                    Log.d("상태","실패: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<CreateRoomResponse>, t: Throwable) {
+                Log.d("상태", t.message.toString())
+            }
+
+        })
+    }
+
 }

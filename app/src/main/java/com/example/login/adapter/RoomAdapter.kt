@@ -21,7 +21,7 @@ class RoomAdapter(private val dataList: List<FindRoomResponse>): RecyclerView.Ad
         val binding = (holder as RoomViewHolder).binding
         //뷰에 데이터 출력
         binding.roomName.text = data.name
-        Log.d("상태", data.name)
+        Log.d("어댑터", data.name)
 //        binding.root.setOnClickListener {
 //            val messageFragment = ChatFragment()
 //

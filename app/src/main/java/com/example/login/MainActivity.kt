@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import com.example.login.presentation.Home
 import com.example.login.databinding.ActivityMainBinding
+import com.example.login.message.createRoom.CreateRoom
 import com.example.login.network.retrofit.RetrofitClient
 import com.example.login.network.retrofit.request.LoginRequset
 import com.example.login.network.retrofit.response.LoginResponse
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mbinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        CreateRoom.context = applicationContext
 
         // 로그인 버튼
         binding.btnLogin.setOnClickListener {
@@ -44,6 +46,8 @@ class MainActivity : AppCompatActivity() {
                         Log.d("상태","성공")
                         SharedPreFerences(this@MainActivity).dataAccessToken = response.body()?.accessToken
                         SharedPreFerences(this@MainActivity).dataRefreshToken = response.body()?.refreshToken
+                        SharedPreFerences(this@MainActivity).dataBearerToken = "Bearer " + response.body()?.accessToken
+                        Log.d("상태","${SharedPreFerences(this@MainActivity).dataBearerToken}")
                         val intent = Intent(this@MainActivity,Home::class.java)
                         startActivity(intent)
                     } else{

@@ -40,8 +40,8 @@ dependencies {
     // Scalars 변환기 라이브러리
     implementation 'com.squareup.retrofit2:converter-scalars:2.6.4'
 
-    //Socket
-    implementation "org.java-websocket:Java-WebSocket:1.5.2"
+    implementation 'com.github.bishoybasily:stomp:2.0.5'
+
 
     //Retrofit2
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

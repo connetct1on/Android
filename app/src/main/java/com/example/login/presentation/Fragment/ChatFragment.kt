@@ -13,6 +13,10 @@ import com.example.login.adapter.MessageAdapter
 import com.example.login.databinding.FragmentChatBinding
 import com.example.login.message.Message
 import com.example.login.network.sharedPreFerences.SharedPreFerences
+import com.gmail.bishoybasily.stomp.lib.Event
+import com.gmail.bishoybasily.stomp.lib.StompClient
+import io.reactivex.disposables.Disposable
+import okhttp3.OkHttpClient
 import org.json.JSONObject
 import java.net.URI
 import kotlin.concurrent.thread
@@ -26,9 +30,9 @@ class ChatFragment : Fragment() {
     private var mbinding: FragmentChatBinding ?= null
     private val binding get() = mbinding!!
 
-    private val serverUri = URI.create("ws://220.94.98.54:7999/rt/chat")
 
-
+    lateinit var stompConnection: Disposable
+    lateinit var topic: Disposable
 
     private lateinit var mAdapter: MessageAdapter
     private var mData = mutableListOf<Message>()
@@ -45,8 +49,28 @@ class ChatFragment : Fragment() {
     ): View {
         mbinding = FragmentChatBinding.inflate(inflater, container, false)
         val view = binding.root
+        val serverUri = "ws://220.94.98.54:7999/ws"
+        val intervalMillis = 1000L
+        val client = OkHttpClient()
 
-        val url = "ws"
+        val stomp = StompClient(client,intervalMillis)
+
+        //connect
+        stompConnection = stomp.connect().subscribe {
+            when (it.type) {
+                Event.Type.OPENED -> {
+                    Log.d("상태","OPENED")
+                }
+                Event.Type.CLOSED -> {
+                    Log.d("상태","CLOSED")
+                }
+                Event.Type.ERROR -> {
+                    Log.d("상태","ERROR")
+                }
+                else -> {}
+            }
+        }
+
 
         binding.messageButton.setOnClickListener {
 

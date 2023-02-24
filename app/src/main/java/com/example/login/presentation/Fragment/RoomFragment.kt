@@ -21,7 +21,7 @@ import retrofit2.Response
 
 
 private lateinit var mAdapter: RoomAdapter
-lateinit var mData: List<FindRoomResponse>
+private var mData: List<FindRoomResponse> = listOf(FindRoomResponse(0,"room","roomId"))
 class RoomFragment : Fragment() {
     private var mbinding: FragmentRoomBinding ?= null
     private val binding get() = mbinding!!
@@ -38,10 +38,11 @@ class RoomFragment : Fragment() {
             ) {
                 if(response.code() == 200){
                     Log.d("상태","성공")
-                    mData = response.body()!!
-                    Log.d("상태","${mData}")
+//                    mData = response.body()!!
+//                    Log.d("상태","${mData}")
                 } else{
-                    Log.d("실패","실패 : ${response.code()}")
+                    Log.d("실패","실패 : ${response.code()} BearerToken: ${SharedPreFerences(requireContext()).dataBearerToken}")
+                    mData = listOf(FindRoomResponse(1,"room","fdklsj"))
                 }
             }
 
@@ -62,7 +63,7 @@ class RoomFragment : Fragment() {
                     if(response.code() == 200){
                         Log.d("상태","성공 : ${response.body()?.roomId}")
                     } else {
-                        Log.d("실패","실패: ${response.code()}")
+                        Log.d("상태","실패: ${response.code()}")
                     }
                 }
 
@@ -73,12 +74,12 @@ class RoomFragment : Fragment() {
             })
         }
 
-//        binding.recyclerview.layoutManager = LinearLayoutManager(activity)
-//        mAdapter = RoomAdapter(mData)
-//        binding.recyclerview.addItemDecoration(
-//            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-//        )
-//        binding.recyclerview.adapter = mAdapter
+        binding.recyclerview.layoutManager = LinearLayoutManager(activity)
+        mAdapter = RoomAdapter(mData)
+        binding.recyclerview.addItemDecoration(
+            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        )
+        binding.recyclerview.adapter = mAdapter
 
         return view
     }

@@ -20,7 +20,7 @@ interface API {
         @Body body: CreateRoomRequest
     ): Call<CreateRoomResponse>
 
-    @GET("api/chat/find")
+    @GET("api/room/find")
     fun findRoom(@Header("Authorization") Authorization: String?): Call<List<FindRoomResponse>>
 
     @POST("api/user/signup.do")

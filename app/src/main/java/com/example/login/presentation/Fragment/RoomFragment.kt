@@ -18,6 +18,7 @@ import com.example.login.network.sharedPreFerences.SharedPreFerences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.concurrent.thread
 
 private var mData: List<FindRoomResponse> = listOf(FindRoomResponse(0,"","roomId"))
 private lateinit var mAdapter: RoomAdapter
@@ -30,7 +31,10 @@ class RoomFragment : Fragment() {
     ): View {
         mbinding = FragmentRoomBinding.inflate(inflater, container, false)
         val view = binding.root
-        findRoom()
+        thread {
+            findRoom()
+        }
+
 
         binding.addRoom.setOnClickListener { //방 추가
             addRoom()

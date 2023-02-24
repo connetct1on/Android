@@ -32,17 +32,17 @@ class MessageAdapter(private val messages: List<Message>): RecyclerView.Adapter<
 
         if(holder.itemViewType == TYPE_MY_MESSAGE){
             val myMessageViewHolder = holder as MyMessageViewHolder
-            myMessageViewHolder.binding.textGchatMessageMe.text= message.sender
+            myMessageViewHolder.binding.textGchatMessageMe.text = message.message
         } else {
             val otherMessageViewHolder = holder as OtherMessageViewHolder
-            otherMessageViewHolder.binding.textGchatMessageOther.text = message.sender
+            otherMessageViewHolder.binding.textGchatMessageOther.text = message.message
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         val message = messages[position]
 
-        return if(message.sender == "HamTory") TYPE_MY_MESSAGE else TYPE_OTHER_MESSAGE
+        return if(message.sender) TYPE_MY_MESSAGE else TYPE_OTHER_MESSAGE
     }
 
     inner class MyMessageViewHolder(val binding: ItemRecyclerviewChatMeBinding):

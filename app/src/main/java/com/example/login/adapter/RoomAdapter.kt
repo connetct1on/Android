@@ -4,9 +4,12 @@ package com.example.login.adapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.login.R
 import com.example.login.databinding.ItemRecyclerviewRoomBinding
 import com.example.login.network.retrofit.response.FindRoomResponse
+import com.example.login.presentation.Fragment.ChatFragment
 
 class RoomAdapter(private val dataList: List<FindRoomResponse>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -21,16 +24,16 @@ class RoomAdapter(private val dataList: List<FindRoomResponse>): RecyclerView.Ad
         val binding = (holder as RoomViewHolder).binding
         //뷰에 데이터 출력
         binding.roomName.text = data.name
-        Log.d("상태", data.name)
-//        binding.root.setOnClickListener {
-//            val messageFragment = ChatFragment()
-//
-//            val fragmentManager = (holder.itemView.context as AppCompatActivity).supportFragmentManager
-//            fragmentManager.beginTransaction()
-//                .replace(R.id.fragmentContainer, messageFragment)
-//                .addToBackStack(null)
-//                .commit()
-//        }
+        Log.d("어댑터", data.name)
+        binding.root.setOnClickListener {
+            val messageFragment = ChatFragment()
+
+            val fragmentManager = (holder.itemView.context as AppCompatActivity).supportFragmentManager
+            fragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, messageFragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 }
 

@@ -14,7 +14,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface API {
-    @POST("api/chat/create")
+    @POST("api/room/create")
     fun createRoom(
         @Header("Authorization") Authorization: String?,
         @Body body: CreateRoomRequest

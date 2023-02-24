@@ -60,16 +60,14 @@ class ChatFragment : Fragment() {
 
         binding.messageButton.setOnClickListener {
 
-            mData.add(Message("${binding.messageText}",""))
+            mData.add(Message(binding.messageText.text.toString(),true))
             runStomp(roomId!!,binding.messageText.text.toString())
             binding.messageText.text = null
-
+            binding.recyclerview.adapter = mAdapter
+            mAdapter.notifyDataSetChanged()
         }
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
         mAdapter = MessageAdapter(mData)
-        binding.recyclerview.addItemDecoration(
-            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-        )
         binding.recyclerview.adapter = mAdapter
 
         return view
@@ -82,7 +80,9 @@ class ChatFragment : Fragment() {
 
     fun runStomp(roomId: String, text: String){
         stompClient.topic("/sub/chat/user/cksgur0612@dgsw.hs.kr34ce07dd-7c66-4d5c-ae77-2544fb35c875").subscribe{
-            Log.d("상태",it.payload)
+            mData.add(Message(binding.messageText.text.toString(),false))
+            binding.recyclerview.adapter = mAdapter
+            mAdapter.notifyDataSetChanged()
         }
         val headerList = arrayListOf<StompHeader>()
         headerList.add(StompHeader("type","ENTER"))

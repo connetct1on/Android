@@ -56,20 +56,20 @@ class ChatFragment : Fragment() {
         val stomp = StompClient(client,intervalMillis)
 
         //connect
-        stompConnection = stomp.connect().subscribe {
-            when (it.type) {
-                Event.Type.OPENED -> {
-                    Log.d("상태","OPENED")
-                }
-                Event.Type.CLOSED -> {
-                    Log.d("상태","CLOSED")
-                }
-                Event.Type.ERROR -> {
-                    Log.d("상태","ERROR")
-                }
-                else -> {}
-            }
-        }
+//        stompConnection = stomp.connect().subscribe {
+//            when (it.type) {
+//                Event.Type.OPENED -> {
+//                    Log.d("상태","OPENED")
+//                }
+//                Event.Type.CLOSED -> {
+//                    Log.d("상태","CLOSED")
+//                }
+//                Event.Type.ERROR -> {
+//                    Log.d("상태","ERROR")
+//                }
+//                else -> {}
+//            }
+//        }
 
 
         binding.messageButton.setOnClickListener {

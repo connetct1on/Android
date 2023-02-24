@@ -19,9 +19,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
-private lateinit var mAdapter: RoomAdapter
 private var mData: List<FindRoomResponse> = listOf(FindRoomResponse(0,"","roomId"))
+private lateinit var mAdapter: RoomAdapter
 class RoomFragment : Fragment() {
     private var mbinding: FragmentRoomBinding ?= null
     private val binding get() = mbinding!!

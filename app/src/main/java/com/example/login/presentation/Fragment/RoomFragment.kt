@@ -35,7 +35,6 @@ class RoomFragment : Fragment() {
             findRoom()
         }
 
-
         binding.addRoom.setOnClickListener { //방 추가
             addRoom()
         }

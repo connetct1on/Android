@@ -14,6 +14,7 @@ import com.example.login.databinding.FragmentChatBinding
 import com.example.login.message.Message
 import com.example.login.message.MessageData
 import com.example.login.network.sharedPreFerences.SharedPreFerences
+import com.google.gson.Gson
 import org.json.JSONObject
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.dto.LifecycleEvent
@@ -73,13 +74,13 @@ class ChatFragment : Fragment() {
 
         stompClient.topic("/sub/chat/user/"+"cksgur0612@dgsw.hs.kr").subscribe{//message 받는거
             Log.d("message.topic","$it")
-            thread {
-                val stompMessage = it
-                val payload = stompMessage.payload
-                val person = Json.decodeFromString<MessageData>(payload)
-                Log.d("상태","${person.message}")
-            }
-//            mData.add(Message(message,false)) //TODO it에서 오는 값중 message만 따로 빼서 리사이클러뷰에 띄워야함
+            val stompMessage = it
+            val payload = stompMessage.payload
+            val gson = Gson()
+            val messageData = gson.fromJson(payload, MessageData::class.java)
+            Log.d("상태","${messageData.message}")
+            mData.add(Message(messageData.message,false))
+
         }
 
 
@@ -99,19 +100,6 @@ class ChatFragment : Fragment() {
     }
 
     private fun SocketStompMessage(roomId: String, text: String, mail: String){
-//        stompClient.topic("/sub/chat/user/"+"cksgur0612@dgsw.hs.kr"+"$roomId").subscribe{//message 받는거
-//            Log.d("상태","$it")
-//            mData.add(Message(it.toString(),false)) //TODO it에서 오는 값중 message만 따로 빼서 리사이클러뷰에 띄워야함
-//            binding.recyclerview.adapter = mAdapter
-//            mAdapter.notifyDataSetChanged()
-//        }
-
-//        val headerList = arrayListOf<StompHeader>()
-//        headerList.add(StompHeader("type","ENTER"))
-//        headerList.add(StompHeader("roomId",roomId))
-//        headerList.add(StompHeader("sender","HamTory"))
-//        headerList.add(StompHeader("message",text))
-
 
         stompClient.lifecycle().subscribe{
             when(it.type){
@@ -138,6 +126,4 @@ class ChatFragment : Fragment() {
         data.put("message",text)
         stompClient.send("/pub/chat/send",data.toString()).subscribe() //메시지 보내는것
     }
-
-
 }

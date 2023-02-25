@@ -80,7 +80,8 @@ class ChatFragment : Fragment() {
             val gson = Gson()
             val messageData = gson.fromJson(payload, MessageData::class.java)
             Log.d("상태","${messageData.message}")
-            mData.add(Message(messageData.message,false))
+
+            mData.add(Message(messageData.message,messageData.sender,1,messageData.type))
             GlobalScope.launch(Dispatchers.Main) {
                 mAdapter.notifyDataSetChanged()
             }

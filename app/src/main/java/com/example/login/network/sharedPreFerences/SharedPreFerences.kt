@@ -2,6 +2,7 @@ package com.example.login.network.sharedPreFerences
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.login.message.MessageData
 
 class SharedPreFerences(context : Context) {
     private val prefsFile = "a"
@@ -21,4 +22,7 @@ class SharedPreFerences(context : Context) {
     var dataUserMail: String?
         get() = prefs.getString("UserMail","")
         set(value) = prefs.edit().putString("UserMail",value).apply()
+    var dataMessage: String?
+        get() = prefs.getString("dataMessage","")
+        set(value) = prefs.edit().putString("dataMessage",value).apply()
 }

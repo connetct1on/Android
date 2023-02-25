@@ -15,6 +15,9 @@ import com.example.login.message.Message
 import com.example.login.message.MessageData
 import com.example.login.network.sharedPreFerences.SharedPreFerences
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.dto.LifecycleEvent
@@ -30,8 +33,6 @@ class ChatFragment : Fragment() {
     //viewBinding
     private var mbinding: FragmentChatBinding ?= null
     private val binding get() = mbinding!!
-
-
 
     private lateinit var mAdapter: MessageAdapter
     private var mData = mutableListOf<Message>()
@@ -80,7 +81,9 @@ class ChatFragment : Fragment() {
             val messageData = gson.fromJson(payload, MessageData::class.java)
             Log.d("상태","${messageData.message}")
             mData.add(Message(messageData.message,false))
-
+            GlobalScope.launch(Dispatchers.Main) {
+                mAdapter.notifyDataSetChanged()
+            }
         }
 
 

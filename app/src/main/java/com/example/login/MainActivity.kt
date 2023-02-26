@@ -41,12 +41,10 @@ class MainActivity : AppCompatActivity() {
                     response: Response<LoginResponse>
                 ) {
                     if(response.code() == 200){
-                        Log.d("상태","성공")
                         SharedPreFerences(this@MainActivity).dataAccessToken = response.body()?.accessToken
                         SharedPreFerences(this@MainActivity).dataRefreshToken = response.body()?.refreshToken
                         SharedPreFerences(this@MainActivity).dataBearerToken = "Bearer " + response.body()?.accessToken
                         SharedPreFerences(this@MainActivity).dataUserMail = id
-                        Log.d("상태","${SharedPreFerences(this@MainActivity).dataBearerToken}")
                         val intent = Intent(this@MainActivity,Home::class.java)
                         finishAffinity()
                         startActivity(intent)

@@ -64,12 +64,9 @@ class RoomFragment : Fragment() {
                 response: Response<List<FindRoomResponse>>
             ) {
                 if(response.code() == 200){
-                    Log.d("상태","성공")
                     mData = response.body()!!
-                    Log.d("상태","${mData}")
                 } else{
                     Log.d("실패","실패 : ${response.code()} BearerToken: ${SharedPreFerences(requireContext()).dataBearerToken}")
-                    mData = listOf(FindRoomResponse(1,"room","fdklsj"))
                 }
             }
 
@@ -88,7 +85,6 @@ class RoomFragment : Fragment() {
                 response: Response<CreateRoomResponse>
             ) {
                 if(response.code() == 200){
-                    Log.d("상태","성공 : ${response.body()?.roomId}")
                 } else {
                     Log.d("상태","실패: ${response.code()}")
                 }

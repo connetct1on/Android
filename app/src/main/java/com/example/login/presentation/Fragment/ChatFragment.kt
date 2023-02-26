@@ -1,5 +1,6 @@
 package com.example.login.presentation.Fragment
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -14,10 +15,12 @@ import com.example.login.databinding.FragmentChatBinding
 import com.example.login.message.Message
 import com.example.login.message.MessageData
 import com.example.login.network.sharedPreFerences.SharedPreFerences
+import com.example.login.presentation.Home
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.dto.LifecycleEvent
@@ -70,18 +73,18 @@ class ChatFragment : Fragment() {
             }
         }
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
-        mAdapter = MessageAdapter(mData)
+        mAdapter = MessageAdapter()
         binding.recyclerview.adapter = mAdapter
 
-        stompClient.topic("/sub/chat/user/"+"cksgur0612@dgsw.hs.kr").subscribe{//message 받는거
-            Log.d("message.topic","$it")
+        stompClient.topic("/sub/chat/user/"+"cksgur0612@dgsw.hs.kr").subscribe{
             val stompMessage = it
             val payload = stompMessage.payload
             val gson = Gson()
-            val messageData = gson.fromJson(payload, MessageData::class.java)
-            Log.d("상태","${messageData.message}")
-            mData.add(Message(messageData.message,false))
-            GlobalScope.launch(Dispatchers.Main) {
+            val messageData = gson.fromJson(payload, MessageData::class.java)//message 받는거
+
+//            mData.add(Message(messageData.message,messageData.sender,messageData.type))
+            mAdapter.addData(Message(messageData.message,messageData.message,messageData.type))
+            activity?.runOnUiThread{
                 mAdapter.notifyDataSetChanged()
             }
         }
@@ -93,7 +96,7 @@ class ChatFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("상태","onDestroyView")
+        Log.d(TAG,"onDestroyView")
         stompClient.disconnect() //소켓 연결 해제
     }
 
@@ -107,19 +110,17 @@ class ChatFragment : Fragment() {
         stompClient.lifecycle().subscribe{
             when(it.type){
                 LifecycleEvent.Type.OPENED -> {
-                    Log.d("상태","OPENED")
+                    Log.d(TAG,"OPENED")
                 }
                 LifecycleEvent.Type.CLOSED -> {
-                    Log.d("상태","CLOSED")
+                    Log.d(TAG,"CLOSED")
                 }
                 LifecycleEvent.Type.ERROR -> {
-                    Log.d("상태","ERROR")
-                    Log.e("상태",it.exception.toString())
+                    Log.d(TAG,"ERROR")
+                    Log.e(TAG,it.exception.toString())
                     Toast.makeText(context, "error: ${it.exception}", Toast.LENGTH_SHORT).show()
                 }
-                else -> {
-                    Log.d("상태",it.message)
-                }
+                else -> {}
             }
         }
         val data = JSONObject()

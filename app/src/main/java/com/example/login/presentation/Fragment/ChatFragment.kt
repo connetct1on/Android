@@ -15,10 +15,12 @@ import com.example.login.databinding.FragmentChatBinding
 import com.example.login.message.Message
 import com.example.login.message.MessageData
 import com.example.login.network.sharedPreFerences.SharedPreFerences
+import com.example.login.presentation.Home
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.dto.LifecycleEvent
@@ -71,7 +73,7 @@ class ChatFragment : Fragment() {
             }
         }
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
-        mAdapter = MessageAdapter(mData)
+        mAdapter = MessageAdapter()
         binding.recyclerview.adapter = mAdapter
 
         stompClient.topic("/sub/chat/user/"+"cksgur0612@dgsw.hs.kr").subscribe{
@@ -79,8 +81,10 @@ class ChatFragment : Fragment() {
             val payload = stompMessage.payload
             val gson = Gson()
             val messageData = gson.fromJson(payload, MessageData::class.java)//message 받는거
-            GlobalScope.launch(Dispatchers.Main) {
-                mData.add(Message(messageData.message,messageData.sender,messageData.type))
+
+//            mData.add(Message(messageData.message,messageData.sender,messageData.type))
+            mAdapter.addData(Message(messageData.message,messageData.message,messageData.type))
+            activity?.runOnUiThread{
                 mAdapter.notifyDataSetChanged()
             }
         }

@@ -12,11 +12,16 @@ import com.example.login.message.Message
 import com.example.login.network.retrofit.request.SignupRequest
 
 
-class MessageAdapter(private val messages: List<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val messages = mutableListOf<Message>()
     //뷰 홀더 타입을 구분하기 위한 상수
     private val TYPE_MY_MESSAGE = 0
     private val TYPE_ADD = 1
+
+    fun addData(newData:Message){
+        messages.addAll(listOf(newData))
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if(viewType == TYPE_MY_MESSAGE){

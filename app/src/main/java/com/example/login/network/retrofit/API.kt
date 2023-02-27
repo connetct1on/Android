@@ -1,25 +1,22 @@
 package com.example.login.network.retrofit
 
-import com.example.login.network.retrofit.request.CreateRoomRequest
-import com.example.login.network.retrofit.request.LoginRequset
-import com.example.login.network.retrofit.request.SignupRequest
-import com.example.login.network.retrofit.response.CreateRoomResponse
-import com.example.login.network.retrofit.response.FindRoomResponse
-import com.example.login.network.retrofit.response.LoginResponse
-import com.example.login.network.retrofit.response.SignupResponse
+import com.example.login.network.retrofit.request.*
+import com.example.login.network.retrofit.response.*
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface API {
-    @POST("api/chat/create")
+    @POST("api/room/create")
     fun createRoom(
+        @Header("Authorization") Authorization: String?,
         @Body body: CreateRoomRequest
     ): Call<CreateRoomResponse>
 
-    @GET("api/chat/find")
-    fun findRoom(): Call<List<FindRoomResponse>>
+    @GET("api/room/find")
+    fun findRoom(@Header("Authorization") Authorization: String?): Call<List<FindRoomResponse>>
 
     @POST("api/user/signup.do")
     fun signup(
@@ -30,4 +27,19 @@ interface API {
     fun login(
         @Body body: LoginRequset
     ): Call<LoginResponse>
+
+    @POST("api/belong/create")
+    fun belongCreate(
+        @Body body: CreateBelongRequset
+    ): Call<Void>
+
+    @GET("api/belong/get/Room")
+    fun getRoom(
+        @Body body: GetRoomRequset
+    ): Call<List<GetRoomResponse>>
+
+    @GET("api/belong/get/User")
+    fun getUser(
+        @Body body: GetUserRequset
+    ): Call<List<GetRoomResponse>>
 }

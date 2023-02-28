@@ -11,5 +11,6 @@ data class MessageData(
     val message: String,
     val roomId: String,
     val sender: String,
-    val type: String
+    val type: String,
+    var time: String
 )

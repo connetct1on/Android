@@ -40,9 +40,14 @@ class MessageAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         Log.d("상태","$message")
 
         if(holder.itemViewType == TYPE_MESSAGE){
+            val time = message.time
             val otherMessageViewHolder = holder as OtherMessageViewHolder
             otherMessageViewHolder.binding.textGchatMessageOther.text = message.message
             otherMessageViewHolder.binding.textGchatUserOther.text = message.sender
+            if(time.substring(8,9).toInt() < 12)
+                otherMessageViewHolder.binding.textGchatTimestampOther.text = "오전 "+"${message.time.substring(11,16)}"
+            else
+                otherMessageViewHolder.binding.textGchatTimestampOther.text = "오후 "+"${message.time.substring(11,16)}"
         } else {
             val addMessageViewHolder = holder as AddMessageViewHolder
             addMessageViewHolder.binding.text.text = "${message.sender}님이 입장하셨습니다."

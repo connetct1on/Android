@@ -87,7 +87,10 @@ class ChatFragment : Fragment() {
             val payload = stompMessage.payload
             val gson = Gson()
             val messageData = gson.fromJson(payload, MessageData::class.java)//message 받는거
-            mAdapter.addData(Message(messageData.message,messageData.sender,messageData.type,))
+
+
+            Log.d("상태","${messageData.time}")
+            mAdapter.addData(Message(messageData.message,messageData.sender,messageData.type,messageData.time))
             activity?.runOnUiThread{
                 mAdapter.notifyDataSetChanged()
             }
@@ -114,7 +117,7 @@ class ChatFragment : Fragment() {
         userName: String,
     ){
 
-        stompClient.lifecycle().subscribe{
+        stompClient.lifecycle().subscribe{거
             when(it.type){
                 LifecycleEvent.Type.OPENED -> {
                     Log.d(TAG,"OPENED")

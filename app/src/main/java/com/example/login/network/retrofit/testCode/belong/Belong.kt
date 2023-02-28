@@ -1,4 +1,4 @@
-package com.example.login.network.retrofit.belong
+package com.example.login.network.retrofit.testCode.belong
 
 import android.util.Log
 import com.example.login.network.retrofit.RetrofitClient
@@ -46,7 +46,7 @@ class Belong {
 
         })
     }
-    fun GetRoomUserEmail(){
+    fun GetRoomEmail(){
         RetrofitClient.api.getUser(GetUserRequset(email = String())).enqueue(object: Callback<List<GetRoomResponse>>{
             override fun onResponse(
                 call: Call<List<GetRoomResponse>>,

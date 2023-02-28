@@ -25,11 +25,9 @@ class MessageAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if(viewType == TYPE_MESSAGE){
-            Log.d(TAG,"viewType: TYPE_MESSAGE")
             val binding = ItemRecyclerviewChatOtherBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             OtherMessageViewHolder(binding)
         } else {
-            Log.d(TAG,"viewType: TYPE_ADD")
             val binding = ItemRecyclerviewAddBinding.inflate(LayoutInflater.from(parent.context),parent, false)
             AddMessageViewHolder(binding)
         }
@@ -39,12 +37,12 @@ class MessageAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val message = messages[position]
+        Log.d("상태","$message")
 
         if(holder.itemViewType == TYPE_MESSAGE){
             val otherMessageViewHolder = holder as OtherMessageViewHolder
             otherMessageViewHolder.binding.textGchatMessageOther.text = message.message
             otherMessageViewHolder.binding.textGchatUserOther.text = message.sender
-            Log.d("상태","${message.sender}")
         } else {
             val addMessageViewHolder = holder as AddMessageViewHolder
             addMessageViewHolder.binding.text.text = "${message.sender}님이 입장하셨습니다."
@@ -53,8 +51,6 @@ class MessageAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         val message = messages[position]
-//        Log.d(TAG,"$message")
-        Log.d(TAG,if(message.type == "ENTER") "message.type: TYPE_ADD" else "message.type: TYPE_MY_MESSAGE")
         return if(message.type == "ENTER") TYPE_ADD else TYPE_MESSAGE
     }
 

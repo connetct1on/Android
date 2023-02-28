@@ -22,7 +22,5 @@ class SharedPreFerences(context : Context) {
     var dataUserMail: String?
         get() = prefs.getString("UserMail","")
         set(value) = prefs.edit().putString("UserMail",value).apply()
-    var dataMessage: String?
-        get() = prefs.getString("dataMessage","")
-        set(value) = prefs.edit().putString("dataMessage",value).apply()
+
 }

@@ -40,9 +40,6 @@ dependencies {
     // Scalars 변환기 라이브러리
     implementation 'com.squareup.retrofit2:converter-scalars:2.6.4'
 
-    //Stomp
-    implementation 'com.github.bishoybasily:stomp:2.0.5'
-
     // stomp
     implementation 'com.github.NaikSoftware:StompProtocolAndroid:1.6.6'
 

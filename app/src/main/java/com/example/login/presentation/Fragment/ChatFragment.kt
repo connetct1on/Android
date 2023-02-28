@@ -41,7 +41,6 @@ class ChatFragment : Fragment() {
     private val serverUri = "ws://220.94.98.54:7999/ws"
     private val stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, serverUri)
 
-    private var userName: String = ""
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,21 +56,24 @@ class ChatFragment : Fragment() {
         val view = binding.root
         val roomName = arguments?.getString("roomName") //방이름
         var roomId = arguments?.getString("roomId") //roomId
-        userName = userGet()
+        var Name: String? = null
+        userGet { responseName ->
+            Name = responseName
+        }
         val headerList = arrayListOf<StompHeader>()
         headerList.add(StompHeader("Authorization",SharedPreFerences(fragmentContext).dataBearerToken))
         stompClient.connect(headerList) //소켓 연결
         val data = JSONObject()
         data.put("type","ENTER")
         data.put("roomId",roomId)
-        data.put("sender",userName)
+        data.put("sender",Name)
         data.put("message","")
 
         stompClient.send("/pub/chat/send",data.toString()).subscribe()
 
         binding.messageButton.setOnClickListener {
             if(!binding.messageText.text.isNullOrEmpty()){
-                SocketStompMessage(roomId!!,binding.messageText.text.toString(),userName)
+                SocketStompMessage(roomId!!,binding.messageText.text.toString(),Name!!)
                 binding.messageText.text = null
             }
         }
@@ -85,7 +87,6 @@ class ChatFragment : Fragment() {
             val payload = stompMessage.payload
             val gson = Gson()
             val messageData = gson.fromJson(payload, MessageData::class.java)//message 받는거
-            Log.d("상태","${messageData.sender}")
             mAdapter.addData(Message(messageData.message,messageData.sender,messageData.type,))
             activity?.runOnUiThread{
                 mAdapter.notifyDataSetChanged()
@@ -99,7 +100,6 @@ class ChatFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d(TAG,"onDestroyView")
         stompClient.disconnect() //소켓 연결 해제
     }
 
@@ -138,7 +138,8 @@ class ChatFragment : Fragment() {
         stompClient.send("/pub/chat/send",data.toString()).subscribe() //메시지 보내는것
     }
 
-    fun userGet(): String{
+    fun userGet(callback: (String) -> Unit){
+        var userName: String
         RetrofitClient.api.authGetUser(Authorization = SharedPreFerences(fragmentContext).dataBearerToken,
             email = SharedPreFerences(fragmentContext).dataUserMail!!
         ).enqueue(object : Callback<AuthUserGetResponse>{
@@ -147,18 +148,14 @@ class ChatFragment : Fragment() {
                 response: Response<AuthUserGetResponse>
             ) {
                 if(response.code() == 200){
-                    Log.d("상태","${response.code()}")
                     userName = response.body()?.name.toString()
-                } else {
-                    Log.d("상태","${response.code()}")
+                    callback(userName)
                 }
             }
-
             override fun onFailure(call: Call<AuthUserGetResponse>, t: Throwable) {
                 Log.d("상태","${t.message}")
+                callback("")
             }
-
         })
-        return userName
     }
 }

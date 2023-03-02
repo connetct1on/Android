@@ -77,7 +77,7 @@ class ChatFragment : Fragment() {
             }
         }
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
-        mAdapter = MessageAdapter()
+        mAdapter = MessageAdapter(fragmentContext)
         binding.recyclerview.adapter = mAdapter
 
         stompClient.topic("/sub/chat/user/"+"cksgur0612@dgsw.hs.kr").subscribe{
@@ -151,6 +151,7 @@ class ChatFragment : Fragment() {
             ) {
                 if(response.code() == 200){
                     userName = response.body()?.name.toString()
+                    SharedPreFerences(fragmentContext).dataUserName = response.body()?.name.toString()
                     callback(userName)
                 }
             }

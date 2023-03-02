@@ -76,17 +76,18 @@ class RoomFragment : Fragment() {
 
         })
     }
-    fun addRoom(){ //방 만드는 함수
-        RetrofitClient.api.createRoom(SharedPreFerences(requireContext()).dataBearerToken,
+    fun addRoom() { //방 만드는 함수
+        RetrofitClient.api.createRoom(
+            SharedPreFerences(requireContext()).dataBearerToken,
             CreateRoomRequest(name = "i번방")
-        ).enqueue(object : Callback<CreateRoomResponse>{
+        ).enqueue(object : Callback<CreateRoomResponse> {
             override fun onResponse(
                 call: Call<CreateRoomResponse>,
                 response: Response<CreateRoomResponse>
             ) {
-                if(response.code() == 200){
+                if (response.code() == 200) {
                 } else {
-                    Log.d("상태","실패: ${response.code()}")
+                    Log.d("상태", "실패: ${response.code()}")
                 }
             }
 

@@ -39,6 +39,7 @@ class Singup : AppCompatActivity() {
             val id = binding.editId.text.toString()
             val pw = binding.editPw.text.toString()
             val pw_re = binding.editPwRe.text.toString()
+            val name = binding.name.text.toString()
 
             // 유저가 입력항목을 다 채우지 않았을 경우
             if(id.isEmpty() || pw.isEmpty() || pw_re.isEmpty()){
@@ -52,7 +53,7 @@ class Singup : AppCompatActivity() {
             }
 
             if(!isExistBlank && isPWSame){
-                val call = RetrofitClient.api.signup(SignupRequest(name = String(), password = pw, email = id))
+                val call = RetrofitClient.api.signup(SignupRequest(name = name, password = pw, email = id))
                 call.enqueue(object : Callback<SignupResponse>{
                     override fun onResponse(
                         call: Call<SignupResponse>,

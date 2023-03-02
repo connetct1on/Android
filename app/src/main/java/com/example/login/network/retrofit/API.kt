@@ -7,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface API {
     @POST("api/room/create")
@@ -42,4 +43,10 @@ interface API {
     fun getUser(
         @Body body: GetUserRequset
     ): Call<List<GetRoomResponse>>
+
+    @POST("api/auth/user/get")
+    fun authGetUser(
+        @Header("Authorization") Authorization: String?,
+        @Query("email") email: String
+    ): Call<AuthUserGetResponse>
 }

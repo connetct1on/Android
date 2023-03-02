@@ -36,9 +36,8 @@ class ChatFragment : Fragment() {
     private val binding get() = mbinding!!
 
     private lateinit var mAdapter: MessageAdapter
-    private var mData = mutableListOf<Message>()
 
-    private val serverUri = "ws://220.94.98.54:7999/ws"
+    private val serverUri = "ws://10.80.162.97:8080/ws"
     private val stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, serverUri)
 
 
@@ -117,7 +116,7 @@ class ChatFragment : Fragment() {
         userName: String,
     ){
 
-        stompClient.lifecycle().subscribe{거
+        stompClient.lifecycle().subscribe{
             when(it.type){
                 LifecycleEvent.Type.OPENED -> {
                     Log.d(TAG,"OPENED")
@@ -161,4 +160,5 @@ class ChatFragment : Fragment() {
             }
         })
     }
+
 }

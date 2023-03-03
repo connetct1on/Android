@@ -14,7 +14,7 @@ import com.example.login.network.retrofit.RetrofitClient
 import com.example.login.network.retrofit.request.CreateRoomRequest
 import com.example.login.network.retrofit.response.CreateRoomResponse
 import com.example.login.network.retrofit.response.FindRoomResponse
-import com.example.login.network.sharedPreFerences.SharedPreFerences
+import com.example.login.db.sharedPreFerences.SharedPreFerences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

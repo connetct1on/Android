@@ -1,4 +1,4 @@
-package com.example.login.network.sharedPreFerences
+package com.example.login.db.sharedPreFerences
 
 import android.content.Context
 import android.content.SharedPreferences

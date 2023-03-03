@@ -9,5 +9,5 @@ data class Message(
     val sender: String,
     val type: String,
     val time: String
-) : RealmObject()
+)
 

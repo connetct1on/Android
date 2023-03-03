@@ -1,6 +1,5 @@
 package com.example.login.adapter
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,8 +9,7 @@ import com.example.login.databinding.ItemRecyclerviewAddBinding
 import com.example.login.databinding.ItemRecyclerviewChatMeBinding
 import com.example.login.databinding.ItemRecyclerviewChatOtherBinding
 import com.example.login.message.Message
-import com.example.login.network.retrofit.request.SignupRequest
-import com.example.login.network.sharedPreFerences.SharedPreFerences
+import com.example.login.db.sharedPreFerences.SharedPreFerences
 
 
 class MessageAdapter(private val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -23,7 +21,7 @@ class MessageAdapter(private val context: Context): RecyclerView.Adapter<Recycle
     private val TYPE_OTHER_MESSAGE = 2
     private val TYPE_ADD = 3
 
-    fun addData(newData:Message){
+    fun addData(newData: Message){
         messages.addAll(listOf(newData))
     }
 

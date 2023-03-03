@@ -11,7 +11,7 @@ import com.example.login.databinding.ActivityMainBinding
 import com.example.login.network.retrofit.RetrofitClient
 import com.example.login.network.retrofit.request.LoginRequset
 import com.example.login.network.retrofit.response.LoginResponse
-import com.example.login.network.sharedPreFerences.SharedPreFerences
+import com.example.login.db.sharedPreFerences.SharedPreFerences
 import com.example.login.presentation.Singup
 import io.realm.Realm
 import retrofit2.Call

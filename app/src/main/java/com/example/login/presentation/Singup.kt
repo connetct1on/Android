@@ -12,7 +12,7 @@ import com.example.login.databinding.ActivitySingupBinding
 import com.example.login.network.retrofit.RetrofitClient
 import com.example.login.network.retrofit.request.SignupRequest
 import com.example.login.network.retrofit.response.SignupResponse
-import com.example.login.network.sharedPreFerences.SharedPreFerences
+import com.example.login.db.sharedPreFerences.SharedPreFerences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

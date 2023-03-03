@@ -11,8 +11,9 @@ import com.example.login.databinding.ActivityMainBinding
 import com.example.login.network.retrofit.RetrofitClient
 import com.example.login.network.retrofit.request.LoginRequset
 import com.example.login.network.retrofit.response.LoginResponse
-import com.example.login.network.sharedPreFerences.SharedPreFerences
+import com.example.login.db.sharedPreFerences.SharedPreFerences
 import com.example.login.presentation.Singup
+import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mbinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        Realm.init(this)
 
         // 로그인 버튼
         binding.btnLogin.setOnClickListener {

@@ -16,7 +16,7 @@ import com.example.login.message.Message
 import com.example.login.message.MessageData
 import com.example.login.network.retrofit.RetrofitClient
 import com.example.login.network.retrofit.response.AuthUserGetResponse
-import com.example.login.network.sharedPreFerences.SharedPreFerences
+import com.example.login.db.sharedPreFerences.SharedPreFerences
 import com.google.gson.Gson
 import org.json.JSONObject
 import ua.naiksoftware.stomp.Stomp
@@ -55,24 +55,24 @@ class ChatFragment : Fragment() {
         val view = binding.root
         val roomName = arguments?.getString("roomName") //방이름
         var roomId = arguments?.getString("roomId") //roomId
-        var Name: String? = null
+        var name: String? = null
         userGet { responseName ->
-            Name = responseName
+            name = responseName
         }
         val headerList = arrayListOf<StompHeader>()
-        headerList.add(StompHeader("Authorization",SharedPreFerences(fragmentContext).dataBearerToken))
+        headerList.add(StompHeader("Authorization", SharedPreFerences(fragmentContext).dataBearerToken))//Socket header추가
         stompClient.connect(headerList) //소켓 연결
         val data = JSONObject()
         data.put("type","ENTER")
         data.put("roomId",roomId)
-        data.put("sender",Name)
+        data.put("sender",name)
         data.put("message","")
 
         stompClient.send("/pub/chat/send",data.toString()).subscribe()
 
         binding.messageButton.setOnClickListener {
             if(!binding.messageText.text.isNullOrEmpty()){
-                SocketStompMessage(roomId!!,binding.messageText.text.toString(),Name!!)
+                SocketStompMessage(roomId!!,binding.messageText.text.toString(),name!!)
                 binding.messageText.text = null
             }
         }
@@ -93,9 +93,9 @@ class ChatFragment : Fragment() {
             activity?.runOnUiThread{
                 mAdapter.notifyDataSetChanged()
             }
+
+
         }
-
-
         return view
     }
 
@@ -161,5 +161,6 @@ class ChatFragment : Fragment() {
             }
         })
     }
+
 
 }

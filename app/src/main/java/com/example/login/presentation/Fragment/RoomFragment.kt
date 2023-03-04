@@ -8,8 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import com.example.login.adapter.RoomAdapter
 import com.example.login.databinding.FragmentRoomBinding
+import com.example.login.db.room.Database
+import com.example.login.db.room.RoomRoom
 import com.example.login.network.retrofit.RetrofitClient
 import com.example.login.network.retrofit.request.CreateRoomRequest
 import com.example.login.network.retrofit.response.CreateRoomResponse
@@ -20,11 +23,16 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.concurrent.thread
 
-private var mData: List<FindRoomResponse> = listOf(FindRoomResponse(0,"","roomId"))
+private var mData: List<FindRoomResponse> = listOf(FindRoomResponse(0,0,"name","roomId0"))
 private lateinit var mAdapter: RoomAdapter
 class RoomFragment : Fragment() {
+
+    //viewBinding
     private var mbinding: FragmentRoomBinding ?= null
     private val binding get() = mbinding!!
+
+    //room Database
+    private lateinit var db: Database
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,13 +42,18 @@ class RoomFragment : Fragment() {
         thread {
             findRoom()
         }
-
+        db = Room.databaseBuilder(
+            requireContext(),
+            Database::class.java, "database"
+        ).build()
+        val getRoom = db.messageDao().getAllMessage()
         binding.addRoom.setOnClickListener { //방 추가
             addRoom()
         }
 
         binding.Refresh.setOnRefreshListener { //새로 고침
             findRoom()
+
             mAdapter = RoomAdapter(mData)
             binding.recyclerview.adapter = mAdapter
             mAdapter.notifyDataSetChanged()
@@ -65,6 +78,10 @@ class RoomFragment : Fragment() {
             ) {
                 if(response.code() == 200){
                     mData = response.body()!!
+                    for(i in response.body()!!){
+                        db.roomDao().insert(roomRoom = i) //error insert를 하려면 코루틴에서 해야된다고 한다
+                    }
+
                 } else{
                     Log.d("실패","실패 : ${response.code()} BearerToken: ${SharedPreFerences(requireContext()).dataBearerToken}")
                 }

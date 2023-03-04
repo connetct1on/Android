@@ -10,8 +10,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import com.example.login.adapter.MessageAdapter
 import com.example.login.databinding.FragmentChatBinding
+import com.example.login.db.room.Database
+import com.example.login.db.room.dao.MessageDao
 import com.example.login.message.Message
 import com.example.login.message.MessageData
 import com.example.login.network.retrofit.RetrofitClient
@@ -29,16 +32,23 @@ import ua.naiksoftware.stomp.dto.StompHeader
 
 class ChatFragment : Fragment() {
 
+
     private lateinit var fragmentContext: Context
 
     //viewBinding
     private var mbinding: FragmentChatBinding ?= null
     private val binding get() = mbinding!!
 
+    //recyclerview adapter
     private lateinit var mAdapter: MessageAdapter
 
+    //Socket
     private val serverUri = "ws://10.80.162.97:8080/ws"
     private val stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, serverUri)
+
+    //RoomDao
+    private lateinit var db: Database
+
 
 
     override fun onAttach(context: Context) {
@@ -59,6 +69,12 @@ class ChatFragment : Fragment() {
         userGet { responseName ->
             name = responseName
         }
+        db = Room.databaseBuilder(
+            requireContext(),
+            Database::class.java, "database"
+        ).build()
+
+        val getMessage = db.messageDao().getAllMessage()
         val headerList = arrayListOf<StompHeader>()
         headerList.add(StompHeader("Authorization", SharedPreFerences(fragmentContext).dataBearerToken))//Socket header추가
         stompClient.connect(headerList) //소켓 연결

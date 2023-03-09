@@ -3,15 +3,12 @@ package com.example.login.presentation
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.view.Window
-import android.view.WindowInsets
-import android.view.WindowInsetsController
+import android.view.*
 import androidx.fragment.app.Fragment
 import com.example.login.R
 import com.example.login.databinding.ActivityHomeBinding
-import com.example.login.presentation.Fragment.ChatFragment
 import com.example.login.presentation.Fragment.HomeFragment
+import com.example.login.presentation.Fragment.QnAFragment
 import com.example.login.presentation.Fragment.RoomFragment
 import com.example.login.presentation.Fragment.SettingFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,6 +20,8 @@ class Home : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mbinding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        //toolbar 초기화
+        setSupportActionBar(binding.toolbar)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
             window.insetsController?.let {
@@ -38,9 +37,10 @@ class Home : AppCompatActivity() {
                     or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
         }
 
-        val homeFragment = HomeFragment()
-        val roomFragment = RoomFragment()
-        val myPageFragment = SettingFragment()
+        val homeFragment = HomeFragment() // main
+        val roomFragment = RoomFragment() // messageRoom
+        val myPageFragment = SettingFragment() // myPage
+        val qnAFragment = QnAFragment() //QnAPage
 
 
         replaceFragment(homeFragment)
@@ -48,10 +48,18 @@ class Home : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> replaceFragment(homeFragment)
-                R.id.chatting -> replaceFragment(roomFragment)
+                R.id.QnA -> replaceFragment(qnAFragment)
                 R.id.myPage -> replaceFragment(myPageFragment)
             }
             true
+        }
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+        when(item.itemId){
+            R.drawable.message_black -> replaceFragment(RoomFragment())
         }
     }
 
@@ -66,5 +74,6 @@ class Home : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         supportActionBar?.show()
+        mbinding = null
     }
 }

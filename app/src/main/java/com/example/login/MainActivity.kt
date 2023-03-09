@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                     Log.d("상태", t.message.toString())
+                    Log.d("상태","onFailure")
                 }
 
             })
@@ -100,5 +101,9 @@ class MainActivity : AppCompatActivity() {
 
         dialog.setPositiveButton("확인",dialog_listener)
         dialog.show()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        mbinding = null
     }
 }

@@ -5,12 +5,19 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.window.OnBackInvokedCallback
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.example.login.MainActivity
+import com.example.login.R
 import com.example.login.adapter.MessageAdapter
 import com.example.login.databinding.FragmentChatBinding
 import com.example.login.db.room.Database
@@ -43,18 +50,14 @@ class ChatFragment : Fragment() {
     private lateinit var mAdapter: MessageAdapter
 
     //Socket
-    private val serverUri = "ws://10.80.162.97:8080/ws"
+    private val serverUri = "ws://10.80.163.36:8080/ws"
     private val stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, serverUri)
 
     //RoomDao
-    private lateinit var db: Database
+//    private lateinit var db: Database
 
 
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        fragmentContext = context
-    }
 
 
     override fun onCreateView(
@@ -63,18 +66,21 @@ class ChatFragment : Fragment() {
     ): View {
         mbinding = FragmentChatBinding.inflate(inflater, container, false)
         val view = binding.root
-        val roomName = arguments?.getString("roomName") //방이름
-        var roomId = arguments?.getString("roomId") //roomId
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
         var name: String? = null
+        val roomId = arguments?.getString("roomId")
         userGet { responseName ->
             name = responseName
         }
-        db = Room.databaseBuilder(
-            requireContext(),
-            Database::class.java, "database"
-        ).build()
 
-        val getMessage = db.messageDao().getAllMessage()
+
+//        db = Room.databaseBuilder(
+//            requireContext(),
+//            Database::class.java, "database"
+//        ).build()
+
+//        val getMessage = db.messageDao().getAllMessage()
+
         val headerList = arrayListOf<StompHeader>()
         headerList.add(StompHeader("Authorization", SharedPreFerences(fragmentContext).dataBearerToken))//Socket header추가
         stompClient.connect(headerList) //소켓 연결
@@ -98,33 +104,61 @@ class ChatFragment : Fragment() {
 
         stompClient.topic("/sub/chat/user/"+"cksgur0612@dgsw.hs.kr").subscribe{
             val stompMessage = it
-            Log.d("상태","$it")
             val payload = stompMessage.payload
             val gson = Gson()
             val messageData = gson.fromJson(payload, MessageData::class.java)//message 받는거
 
-
-            Log.d("상태","${messageData.time}")
             mAdapter.addData(Message(messageData.message,messageData.sender,messageData.type,messageData.time))
             activity?.runOnUiThread{
                 mAdapter.notifyDataSetChanged()
             }
-
-
         }
         return view
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val roomName = arguments?.getString("roomName")
+        (activity as AppCompatActivity).supportActionBar?.apply {
+//            setHomeAsUpIndicator(R.drawable.ic_arrow_back_black)
+            //toolbar menu에 뒤로가기 icon
+            setDisplayHomeAsUpEnabled(true)
+            //toolbar title에 방이름띄우기
+            title = "$roomName"
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val callback = object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                Log.d("상태","뒤로가기")
+            }
+        }
+
+        when(item.itemId){
+            R.drawable.baseline_arrow_back_ios_new_24 -> {
+                //baseline_arrow_back_ios_new_24 icon을 클릭하면
+                requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        //fragment에서 context사용
+        fragmentContext = context
+    }
+
 
 
     override fun onDestroyView() {
         super.onDestroyView()
         stompClient.disconnect() //소켓 연결 해제
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
         mbinding = null
     }
+
+
 
     private fun SocketStompMessage(
         roomId: String,
@@ -143,7 +177,6 @@ class ChatFragment : Fragment() {
                 LifecycleEvent.Type.ERROR -> {
                     Log.d(TAG,"ERROR")
                     Log.e(TAG,it.exception.toString())
-                    Toast.makeText(context, "error: ${it.exception}", Toast.LENGTH_SHORT).show()
                 }
                 else -> {}
             }

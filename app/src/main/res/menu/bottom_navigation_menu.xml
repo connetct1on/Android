@@ -7,9 +7,9 @@
         android:title="홈" />
 
     <item
-        android:id="@+id/chatting"
-        android:icon="@drawable/ic_baseline_chat_bubble_24"
-        android:title="채팅" />
+        android:id="@+id/QnA"
+        android:icon="@drawable/baseline_question_mark_24"
+        android:title="지식인" />
 
     <item
         android:id="@+id/myPage"

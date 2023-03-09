@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
@@ -18,6 +19,9 @@ import com.example.login.network.retrofit.request.CreateRoomRequest
 import com.example.login.network.retrofit.response.CreateRoomResponse
 import com.example.login.network.retrofit.response.FindRoomResponse
 import com.example.login.db.sharedPreFerences.SharedPreFerences
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,23 +36,27 @@ class RoomFragment : Fragment() {
     private val binding get() = mbinding!!
 
     //room Database
-    private lateinit var db: Database
+    private lateinit var database: Database
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mbinding = FragmentRoomBinding.inflate(inflater, container, false)
         val view = binding.root
+//        val db = Room.databaseBuilder(requireContext(), Database::class.java, "database").build()
+//        val roomDao = db.roomDao()
+//        val roomDataList = roomDao.getAllRoom()
         thread {
             findRoom()
         }
-        db = Room.databaseBuilder(
-            requireContext(),
-            Database::class.java, "database"
-        ).build()
-        val getRoom = db.messageDao().getAllMessage()
-        binding.addRoom.setOnClickListener { //방 추가
-            addRoom()
+//        database = Room.databaseBuilder(
+//            requireContext(),
+//            Database::class.java, "database"
+//        ).build()
+//        val getRoom = database.messageDao().getAllMessage()
+        binding.addRoom.setOnClickListener { //방 추가 임시
+//            addRoom()
+//            Log.d("상태","$roomDataList")
         }
 
         binding.Refresh.setOnRefreshListener { //새로 고침
@@ -78,9 +86,11 @@ class RoomFragment : Fragment() {
             ) {
                 if(response.code() == 200){
                     mData = response.body()!!
-                    for(i in response.body()!!){
-                        db.roomDao().insert(roomRoom = i) //error insert를 하려면 코루틴에서 해야된다고 한다
-                    }
+//                    for(i in response.body()!!){
+//                        lifecycleScope.launch {
+//                            insertData(i)
+//                        }
+//                    }
 
                 } else{
                     Log.d("실패","실패 : ${response.code()} BearerToken: ${SharedPreFerences(requireContext()).dataBearerToken}")
@@ -93,6 +103,9 @@ class RoomFragment : Fragment() {
 
         })
     }
+//    suspend fun insertData(data: FindRoomResponse) = withContext(Dispatchers.IO){
+//        database.roomDao().insert(data)
+//    }
     fun addRoom() { //방 만드는 함수
         RetrofitClient.api.createRoom(
             SharedPreFerences(requireContext()).dataBearerToken,
@@ -113,6 +126,11 @@ class RoomFragment : Fragment() {
             }
 
         })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mbinding = null
     }
 
 }

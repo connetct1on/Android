@@ -9,7 +9,7 @@ interface RoomDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(roomRoom: FindRoomResponse)
 
-    @Query("SELECT * FROM room WHERE roomId") // WHERE roomId = :roomId
+    @Query("SELECT * FROM room ") // WHERE roomId = :roomId
     fun getAllRoom()
 
     @Delete

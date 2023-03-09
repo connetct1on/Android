@@ -115,4 +115,9 @@ class Singup : AppCompatActivity() {
         dialog.setPositiveButton("확인",dialog_listener)
         dialog.show()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mbinding = null
+    }
 }

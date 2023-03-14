@@ -3,6 +3,9 @@ package com.example.login.db.sharedPreFerences
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.login.message.MessageData
+import com.example.login.network.retrofit.response.FindRoomResponse
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class SharedPreFerences(context : Context) {
     private val prefsFile = "a"
@@ -25,4 +28,16 @@ class SharedPreFerences(context : Context) {
     var dataUserName: String?
         get() = prefs.getString("UserName","")
         set(value) = prefs.edit().putString("UserName",value).apply()
+    var dataGetRoom: List<FindRoomResponse>
+        get(){
+            val gson = Gson()
+            val json = prefs.getString("GetRoom",null)
+            val type = object : TypeToken<List<FindRoomResponse>>(){}.type
+            return gson.fromJson(json, type) ?: emptyList()
+        }
+        set(value){
+            val gson = Gson()
+            val json = gson.toJson(value)
+            prefs.edit().putString("GetRoom",json).apply()
+        }
 }

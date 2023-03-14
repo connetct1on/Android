@@ -37,6 +37,7 @@ class RoomFragment : Fragment() {
 
     //room Database
     private lateinit var database: Database
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,8 +47,13 @@ class RoomFragment : Fragment() {
 //        val db = Room.databaseBuilder(requireContext(), Database::class.java, "database").build()
 //        val roomDao = db.roomDao()
 //        val roomDataList = roomDao.getAllRoom()
-        thread {
-            findRoom()
+        findRoom().run{
+            binding.recyclerview.layoutManager = LinearLayoutManager(activity)
+            mAdapter = RoomAdapter(mData)
+            binding.recyclerview.addItemDecoration( //recyclerview 구분선
+                DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+            )
+            binding.recyclerview.adapter = mAdapter //어댑터 연결
         }
 //        database = Room.databaseBuilder(
 //            requireContext(),
@@ -61,19 +67,13 @@ class RoomFragment : Fragment() {
 
         binding.Refresh.setOnRefreshListener { //새로 고침
             findRoom()
-
             mAdapter = RoomAdapter(mData)
             binding.recyclerview.adapter = mAdapter
             mAdapter.notifyDataSetChanged()
             binding.Refresh.isRefreshing = false
         }
 
-        binding.recyclerview.layoutManager = LinearLayoutManager(activity)
-        mAdapter = RoomAdapter(mData)
-        binding.recyclerview.addItemDecoration( //recyclerview 구분선
-            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-        )
-        binding.recyclerview.adapter = mAdapter //어댑터 연결
+
 
         return view
     }
@@ -86,12 +86,7 @@ class RoomFragment : Fragment() {
             ) {
                 if(response.code() == 200){
                     mData = response.body()!!
-//                    for(i in response.body()!!){
-//                        lifecycleScope.launch {
-//                            insertData(i)
-//                        }
-//                    }
-
+                    SharedPreFerences(requireContext()).dataGetRoom = response.body()!!
                 } else{
                     Log.d("실패","실패 : ${response.code()} BearerToken: ${SharedPreFerences(requireContext()).dataBearerToken}")
                 }

@@ -11,7 +11,6 @@ import com.example.login.databinding.ItemRecyclerviewChatOtherBinding
 import com.example.login.message.Message
 import com.example.login.db.sharedPreFerences.SharedPreFerences
 
-
 class MessageAdapter(private val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val messages = mutableListOf<Message>()
@@ -42,7 +41,6 @@ class MessageAdapter(private val context: Context): RecyclerView.Adapter<Recycle
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val message = messages[position]
-        Log.d("상태","$message")
 
         val text = message.time
         val pattern = Regex("\\d{2}:\\d{2}")
@@ -66,13 +64,11 @@ class MessageAdapter(private val context: Context): RecyclerView.Adapter<Recycle
             if(time?.substring(0,2)?.toInt()!! < 12) {
                 myMessageViewHolder.binding.textGchatTimestampMe.text =
                     "오전 " + "$hour" + ":" + "${time.substring(3,5)}"
-                Log.d("시간", "${time}")
             } else {
                 myMessageViewHolder.binding.textGchatTimestampMe.text =
                     "오후 " + "${hour!! - 12}" + ":" + "${time.substring(3,5)}"
             }
         } else {
-            Log.d("어댑터Add","${holder is AddMessageViewHolder} $holder")
             val addMessageViewHolder = holder as AddMessageViewHolder
             addMessageViewHolder.binding.text.text = "${message.sender}님이 입장하셨습니다."
         }
@@ -81,10 +77,13 @@ class MessageAdapter(private val context: Context): RecyclerView.Adapter<Recycle
     override fun getItemViewType(position: Int): Int {
         val message = messages[position]
         return if(message.type == "ENTER"){
+            Log.d("어댑터","ENTER")
             TYPE_ADD
         } else if(message.type == "TALK" && message.sender == SharedPreFerences(context).dataUserName){
+            Log.d("어댑터","TALK && ME ${SharedPreFerences(context).dataUserName} == ${message.sender}")
             TYPE_ME_MESSAGE
         } else{
+            Log.d("어댑터","TALK && OTHER ${SharedPreFerences(context).dataUserName} != ${message.sender}")
             TYPE_OTHER_MESSAGE
         }
     }

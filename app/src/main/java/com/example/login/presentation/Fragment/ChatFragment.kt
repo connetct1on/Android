@@ -50,7 +50,7 @@ class ChatFragment : Fragment() {
     private lateinit var mAdapter: MessageAdapter
 
     //Socket
-    private val serverUri = "ws://10.80.163.36:8080/ws"
+    private val serverUri = "ws://10.80.161.109:8080/ws"
     private val stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, serverUri)
 
     //RoomDao
@@ -69,9 +69,22 @@ class ChatFragment : Fragment() {
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
         var name: String? = null
         val roomId = arguments?.getString("roomId")
-        userGet { responseName ->
-            name = responseName
-        }
+
+        RetrofitClient.api.authGetUser(Authorization = SharedPreFerences(fragmentContext).dataBearerToken,
+            email = SharedPreFerences(fragmentContext).dataUserMail!!
+        ).enqueue(object : Callback<AuthUserGetResponse>{
+            override fun onResponse(
+                call: Call<AuthUserGetResponse>,
+                response: Response<AuthUserGetResponse>
+            ) {
+                if(response.code() == 200){
+                    SharedPreFerences(fragmentContext).dataUserName = response.body()?.name.toString()
+                }
+            }
+            override fun onFailure(call: Call<AuthUserGetResponse>, t: Throwable) {
+                Log.d("상태","${t.message}")
+            }
+        })
 
 
 //        db = Room.databaseBuilder(
@@ -84,6 +97,8 @@ class ChatFragment : Fragment() {
         val headerList = arrayListOf<StompHeader>()
         headerList.add(StompHeader("Authorization", SharedPreFerences(fragmentContext).dataBearerToken))//Socket header추가
         stompClient.connect(headerList) //소켓 연결
+        name = SharedPreFerences(fragmentContext).dataUserName
+        Log.d("상태","$name")
         val data = JSONObject()
         data.put("type","ENTER")
         data.put("roomId",roomId)
@@ -191,24 +206,7 @@ class ChatFragment : Fragment() {
 
     fun userGet(callback: (String) -> Unit){
         var userName: String
-        RetrofitClient.api.authGetUser(Authorization = SharedPreFerences(fragmentContext).dataBearerToken,
-            email = SharedPreFerences(fragmentContext).dataUserMail!!
-        ).enqueue(object : Callback<AuthUserGetResponse>{
-            override fun onResponse(
-                call: Call<AuthUserGetResponse>,
-                response: Response<AuthUserGetResponse>
-            ) {
-                if(response.code() == 200){
-                    userName = response.body()?.name.toString()
-                    SharedPreFerences(fragmentContext).dataUserName = response.body()?.name.toString()
-                    callback(userName)
-                }
-            }
-            override fun onFailure(call: Call<AuthUserGetResponse>, t: Throwable) {
-                Log.d("상태","${t.message}")
-                callback("")
-            }
-        })
+
     }
 
 

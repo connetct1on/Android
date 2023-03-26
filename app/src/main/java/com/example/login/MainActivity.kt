@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
                     Log.d("상태", t.message.toString())
                     Log.d("상태","onFailure")
                 }
-
             })
        }
 

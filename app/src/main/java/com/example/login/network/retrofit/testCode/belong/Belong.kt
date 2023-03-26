@@ -11,7 +11,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class Belong {
-    fun BelongCreate(){
+    fun belongCreate(){
         RetrofitClient.api.belongCreate(CreateBelongRequset(user = String(), room = String())).enqueue(object : Callback<Void>{
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if(response.code() == 200){
@@ -27,7 +27,7 @@ class Belong {
 
         })
     }
-    fun GetRoom(){
+    fun getRoom(){
         RetrofitClient.api.getRoom(GetRoomRequset(roomId = String())).enqueue(object : Callback<List<GetRoomResponse>>{
             override fun onResponse(
                 call: Call<List<GetRoomResponse>>,
@@ -46,7 +46,7 @@ class Belong {
 
         })
     }
-    fun GetRoomEmail(){
+    fun getRoomEmail(){
         RetrofitClient.api.getUser(GetUserRequset(email = String())).enqueue(object: Callback<List<GetRoomResponse>>{
             override fun onResponse(
                 call: Call<List<GetRoomResponse>>,

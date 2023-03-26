@@ -48,7 +48,7 @@ class Home : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> replaceFragment(homeFragment)
-                R.id.QnA -> replaceFragment(roomFragment)
+                R.id.QnA -> replaceFragment(qnAFragment)
                 R.id.myPage -> replaceFragment(myPageFragment)
             }
             true

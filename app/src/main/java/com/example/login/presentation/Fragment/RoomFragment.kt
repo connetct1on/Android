@@ -111,6 +111,7 @@ class RoomFragment : Fragment() {
                 response: Response<CreateRoomResponse>
             ) {
                 if (response.code() == 200) {
+
                 } else {
                     Log.d("상태", "실패: ${response.code()}")
                 }

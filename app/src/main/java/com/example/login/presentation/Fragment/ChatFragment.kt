@@ -50,7 +50,7 @@ class ChatFragment : Fragment() {
     private lateinit var mAdapter: MessageAdapter
 
     //Socket
-    private val serverUri = "ws://10.80.163.96:8080/ws"
+    private val serverUri = "ws://10.80.161.109:8080/ws"
     private val stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, serverUri)
 
     //RoomDao
